@@ -4,28 +4,48 @@ version '1.0-SNAPSHOT'
 buildscript {
     repositories {
         google()
-        mavenCentral()
+        jcenter()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.1.1'
+        classpath 'com.android.tools.build:gradle:8.1.1'
     }
 }
 
 rootProject.allprojects {
     repositories {
         google()
-        mavenCentral()
+        jcenter()
     }
 }
 
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 30
+    if (project.android.hasProperty('namespace') ||
+        getGradle().getGradleVersion().substring(0, 1).toInteger() >= 8) {
+        namespace "com.hemanthraj.fluttercompass"
+    }
+
+    compileSdk 33
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17.toString()
+        targetCompatibility JavaVersion.VERSION_17.toString()
+    }
+
+    java {
+        toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+        }
+    }
+
+    sourceSets {
+        main.java.srcDirs += "src/main/java"
+    }
 
     defaultConfig {
-        minSdkVersion 20
+        minSdkVersion 21
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     lintOptions {
